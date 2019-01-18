@@ -16,4 +16,4 @@ Implementation of  Real time Credit card Fraud Detection using Spark Kafka and C
 Implementation of Spark ML Pipeline Stages like String Indexer, One Hot Encoder and Vector Assembler for Pre-processing
 
 ### Possible Architecture
-![image](http://github.com/Yunlily/Insight-Project/raw/master/image/Screen Shot 2019-01-18 at 07.53.42.png)
+![image](http://github.com/Yunlily/Insight-Project/raw/master/Image/Architecture.png)
