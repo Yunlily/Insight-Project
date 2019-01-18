@@ -15,5 +15,11 @@ Implementation of  Real time Credit card Fraud Detection using Spark Kafka and C
 
 Implementation of Spark ML Pipeline Stages like String Indexer, One Hot Encoder and Vector Assembler for Pre-processing
 
+Integration of Spark Streaming Job with Kafka and Cassandra
+
+Exactly once semantics using Spark Streaming custom offset management
+
+Automate the Spark Jobs  using Airflow Automation framework on Spark Standalone Cluster.
+
 ### Possible Architecture
 ![image](http://github.com/Yunlily/Insight-Project/raw/master/Image/Architecture.png)
