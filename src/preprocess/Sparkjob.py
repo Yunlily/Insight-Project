@@ -11,39 +11,88 @@ from pyspark.sql.types import *
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-
-    
-
-
 if __name__ == "__main__":
     # $example on:init_session$
     
-    spark = SparkSession \
-        .builder \
-        .appName("Python Spark SQL") \
-        .config("spark.some.config.option", "some-value") \
-        .getOrCreate()
+    conf = SparkConf().setAppName("CreditCardInfo")
+    sc = SparkContext(conf=conf)
     # $example off:init_session$
-    df = spark.read.format("csv").option("header","true").option("delimiter",",").load("s3n://creditcardtransaction/trans.csv")
+    rdd = sc.textFile("s3n://creditcardtransaction/trans.csv")
+
+
+    schema = (StructType().add("Name",StringType(), False)
+              .add("Phone", StringType(), False)
+              .add("Email", StringType(), False)
+              .add("Birthday", StringType(), False)
+              .add("Company", StringType(), False)
+              .add("Address", StringType(), False)
+              .add("City", StringType(), False)
+              .add("Postal", StringType(), False)
+              .add("Latitude", StringType(), False)
+              .add("SSN", StringType(), False)
+              .add("PAN", StringType(), False)
+              .add("PIN", StringType(), False)
+              .add("CVV", StringType(), False)
+              .add("Type", StringType(), False)
+              .add("Guarantor", StringType(), False)
+              .add("G-SSN", StringType(), False)
+              .add("Tran_num", StringType(), False)
+              .add("Merchant", StringType(), False)
+              .add("Time", StringType(), False)
+              .add("Status", StringType(), False)
+              .add("Consumption Type", StringType(), False)
+              .add("CardType", StringType(), False)
+              .add("Amount", StringType(), False)
+             )
+                         
+    
+    
+    
+    
+#                         ([StructField("Name", StringType(), False)],
+#                         [StructField("Phone", StringType(), False)],
+#                         [StructField("Email", StringType(), False)],
+#                         [StructField("Birthday", DateType(), False)],
+#                         [StructField("Company", StringType(), False)],
+#                         [StructField("Address", StringType(), False)],
+#                         [StructField("City", StringType(), False)],
+#                         [StructField("Postal", IntegerType(), False)],
+#                         [StructField("Latitude", StringType(), False)],
+#                         [StructField("SSN", IntegerType(), False)],
+#                         [StructField("PAN", StringType(), False)],
+#                         [StructField("PIN", StringType(), False)],
+#                         [StructField("CVV", StringType(), False)],
+#                         [StructField("Type", StringType(), False)],
+#                         [StructField("Guarantor", StringType(), False)],
+#                         [StructField("G-SSN", IntegerType(), False)],
+#                         [StructField("Tran_num", StringType(), False)],
+#                         [StructField("Merchant", StringType(), False)],
+#                         [StructField("Time", DateType(), False)],
+#                         [StructField("Status", StringType(), False)],
+#                         [StructField("Consumption Type", StringType(), False)],
+#                         [StructField("CardType", StringType(), False)],
+#                         [StructField("Amount", StringType(), False)
+#                         ])
+    
+    rdd = rdd.map(lambda x:x.split(";"))
+    sqlContext = SQLContext(sc)
+    df = sqlContext.createDataFrame(rdd, schema)
     df.show()
     
-    card_info =  df.select("PAN","Type","Name","PIN","CVV")
-    df.printSchema()
-    user_info = df.select("SSN","Name","Email","Birthday","Company","Guarantor")
-    guarantor_info = df.select("Guarantor","G-SSN","Name","SSN","PAN")
-    trans_info = df.select("PAN","Transacton Number","Latitude")
-    buy_info = df.select("Name","Date","Transacton Number","Merchant","ConsumType")
-    user_address_info = df.select("Name","SSN","City","Postal","Region","Country")
+    
+    
 #     Displays the content of the DataFrame to stdout
-    sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
-    user_address_info.write.jdbc(
-        url='jdbc:mysql://localhost/card_db',
-        table='user_address_info',
-        mode='append',
-        properties = sdf_props
-    )
+#     sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
+#     user_address_info.write.jdbc(
+#         url='jdbc:mysql://localhost/card_db',
+#         table='user_address_info',
+#         mode='append',
+#         properties = sdf_props
+#     )
 
-    spark.stop()
+    
+
+    sc.stop()
     
     
     
