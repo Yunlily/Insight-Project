@@ -16,10 +16,10 @@ if __name__ == "__main__":
     
     conf = SparkConf().setAppName("CreditCardInfo")
     sc = SparkContext(conf=conf)
-    # $example off:init_session$
+    #read raw file from S3 bucket to RDD
     rdd = sc.textFile("s3n://creditcardtransaction/trans.csv")
 
-
+    #Add schema
     schema = (StructType().add("Name",StringType(), False)
               .add("Phone", StringType(), False)
               .add("Email", StringType(), False)
@@ -46,38 +46,14 @@ if __name__ == "__main__":
              )
                          
     
-    
-    
-    
-#                         ([StructField("Name", StringType(), False)],
-#                         [StructField("Phone", StringType(), False)],
-#                         [StructField("Email", StringType(), False)],
-#                         [StructField("Birthday", DateType(), False)],
-#                         [StructField("Company", StringType(), False)],
-#                         [StructField("Address", StringType(), False)],
-#                         [StructField("City", StringType(), False)],
-#                         [StructField("Postal", IntegerType(), False)],
-#                         [StructField("Latitude", StringType(), False)],
-#                         [StructField("SSN", IntegerType(), False)],
-#                         [StructField("PAN", StringType(), False)],
-#                         [StructField("PIN", StringType(), False)],
-#                         [StructField("CVV", StringType(), False)],
-#                         [StructField("Type", StringType(), False)],
-#                         [StructField("Guarantor", StringType(), False)],
-#                         [StructField("G-SSN", IntegerType(), False)],
-#                         [StructField("Tran_num", StringType(), False)],
-#                         [StructField("Merchant", StringType(), False)],
-#                         [StructField("Time", DateType(), False)],
-#                         [StructField("Status", StringType(), False)],
-#                         [StructField("Consumption Type", StringType(), False)],
-#                         [StructField("CardType", StringType(), False)],
-#                         [StructField("Amount", StringType(), False)
-#                         ])
-    
+    #Create DF using RDD and schema
     rdd = rdd.map(lambda x:x.split(";"))
     sqlContext = SQLContext(sc)
     df = sqlContext.createDataFrame(rdd, schema)
-    df.show()
+    
+    #
+    df.filter(df['Status'] == "Approved").show()
+    
     
     
     
