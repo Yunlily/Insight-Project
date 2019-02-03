@@ -18,41 +18,20 @@ if __name__ == "__main__":
     sc = SparkContext(conf=conf)
     #read raw file from S3 bucket to RDD
     rdd = sc.textFile("s3n://creditcardtransaction/trans.csv")
+    rdd1 = rdd.map(lambda x:x.split(";"))
 
     #Add schema
-    schema = (StructType().add("Name",StringType(), False)
-              .add("Phone", StringType(), False)
-              .add("Email", StringType(), False)
-              .add("Birthday", StringType(), False)
-              .add("Company", StringType(), False)
-              .add("Address", StringType(), False)
-              .add("City", StringType(), False)
-              .add("Postal", StringType(), False)
-              .add("Latitude", StringType(), False)
-              .add("SSN", StringType(), False)
-              .add("PAN", StringType(), False)
-              .add("PIN", StringType(), False)
-              .add("CVV", StringType(), False)
-              .add("Type", StringType(), False)
-              .add("Guarantor", StringType(), False)
-              .add("G-SSN", StringType(), False)
-              .add("Tran_num", StringType(), False)
-              .add("Merchant", StringType(), False)
-              .add("Time", StringType(), False)
-              .add("Status", StringType(), False)
-              .add("Consumption Type", StringType(), False)
-              .add("CardType", StringType(), False)
-              .add("Amount", StringType(), False)
-             )
-                         
-    
-    #Create DF using RDD and schema
-    rdd = rdd.map(lambda x:x.split(";"))
+    schemaString = "Name Phone Email Birthday Company Address City Postal Latitude SSN PAN PIN CVV Type Guarantor G-SSN Tran_num Merchant Date Status Tran_type CardType Amount"
+    fields = [StructField(field_name,StringType(),False) for field_name in schemaString.split()]
+
+#     Create DF using RDD and schema
+    schema = StructType(fields)
     sqlContext = SQLContext(sc)
-    df = sqlContext.createDataFrame(rdd, schema)
+    df = sqlContext.createDataFrame(rdd1, schema)
+    df.filter(df['Status'] == "Approved").createOrReplaceTempView("Card")
+    results = sqlContext.sql("SELECT Name FROM Card")
+    results.show()
     
-    #
-    df.filter(df['Status'] == "Approved").show()
     
     
     
