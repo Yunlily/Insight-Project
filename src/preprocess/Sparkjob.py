@@ -28,9 +28,9 @@ if __name__ == "__main__":
     schema = StructType(fields)
     sqlContext = SQLContext(sc)
     df = sqlContext.createDataFrame(rdd1, schema)
-    df.filter(df['Status'] == "Approved").createOrReplaceTempView("Card")
-    results = sqlContext.sql("SELECT Name FROM Card")
-    results.show()
+    df = df.filter(df['Status'] == "Approved")
+    
+    
     
     
     
