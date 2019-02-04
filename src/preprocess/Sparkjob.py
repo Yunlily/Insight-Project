@@ -3,9 +3,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import Row
-
 from pyspark.sql import SQLContext
-
 from pyspark.sql.types import *
 
 reload(sys)
@@ -17,37 +15,60 @@ if __name__ == "__main__":
     conf = SparkConf().setAppName("CreditCardInfo")
     sc = SparkContext(conf=conf)
     #read raw file from S3 bucket to RDD
-    rdd = sc.textFile("s3n://creditcardtransaction/trans.csv")
-    rdd1 = rdd.map(lambda x:x.split(";"))
-
+    rdd_user = sc.textFile("s3n://creditcardtransaction/user.csv")
+    header = rdd_user.first()
+    rdduser = rdd_user.filter(lambda line: line != header).map(lambda x:x.split("|"))
+    
+    rdd_card = sc.textFile("s3n://creditcardtransaction/card.csv")
+    header = rdd_card.first()
+    rddcard = rdd_card.filter(lambda line: line != header).map(lambda x:x.split("|"))
+    
+    rdd_trans = sc.textFile("s3n://creditcardtransaction/trans.csv")
+    header = rdd_trans.first()
+    rddtrans = rdd_trans.filter(lambda line: line != header).map(lambda x:x.split("|"))
     #Add schema
-    schemaString = "Name Phone Email Birthday Company Address City Postal Latitude SSN PAN PIN CVV Type Guarantor G-SSN Tran_num Merchant Date Status Tran_type CardType Amount"
-    fields = [StructField(field_name,StringType(),False) for field_name in schemaString.split()]
-
+    schemaString1 = "Name Phone Birthday CardNum Address City Postal"
+    schemaString2 = "Name PAN PIN CVV Limits Guarantor CardType"
+    schemaString3 = "Name Tran_num PAN Merchant Amount Time Type Status"
+    fields_user = [StructField(field_name,StringType(),False) for field_name in schemaString1.split()]
+    fields_card = [StructField(field_name,StringType(),False) for field_name in schemaString2.split()]
+    fields_trans = [StructField(field_name,StringType(),False) for field_name in schemaString3.split()]
+    
+    
 #     Create DF using RDD and schema
-    schema = StructType(fields)
+    schema1 = StructType(fields_user)
+    schema2 = StructType(fields_card)
+    schema3 = StructType(fields_trans)
     sqlContext = SQLContext(sc)
-    df = sqlContext.createDataFrame(rdd1, schema)
-    df = df.filter(df['Status'] == "Approved")
+    user_info = sqlContext.createDataFrame(rdduser, schema1)
+    card_info = sqlContext.createDataFrame(rddcard, schema2)
+    trans_info = sqlContext.createDataFrame(rddtrans, schema3)
     
+#    Displays the content of the DataFrame to stdout    
+    user_info.show()
+    card_info.show()
+    trans_info.show()
     
-    
-    
-    
-    
-    
-#     Displays the content of the DataFrame to stdout
-#     sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
-#     user_address_info.write.jdbc(
-#         url='jdbc:mysql://localhost/card_db',
-#         table='user_address_info',
-#         mode='append',
-#         properties = sdf_props
-#     )
-
+    sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
+    user_info.write.jdbc(
+        url='jdbc:mysql://localhost/card_db',
+        table='user_info',
+        mode='append',
+        properties = sdf_props
+    )
+    card_info.write.jdbc(
+        url='jdbc:mysql://localhost/card_db',
+        table='card_info',
+        mode='append',
+        properties = sdf_props
+    )
+    trans_info.write.jdbc(
+        url='jdbc:mysql://localhost/card_db',
+        table='trans_info',
+        mode='append',
+        properties = sdf_props
+    )
     
 
     sc.stop()
-    
-    
     
