@@ -1,6 +1,6 @@
 import sys
 import pyspark
-from bisect import bisect_right
+from bisect import *
 from pyspark.sql import SparkSession
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import Row
@@ -27,31 +27,41 @@ if __name__ == "__main__":
     
     credit_table.createOrReplaceTempView("credit_table")
     
-#     sqlContext.sql("""
-#         select
-#              *
-#         from
-#             credit_table
-#     """).show() 
-
     credit_start_bd = sc.broadcast(credit_table.select("Credit_start").orderBy("Credit_start").rdd.flatMap(lambda x:x).collect())
     
+
+#     print(credit_start_bd.value)
+    #Binary Search to find the start of Credit
     def find_le(x):
         i = bisect_right(credit_start_bd.value,x)
         if i:
             return credit_start_bd.value[i-1]
         return None
+
     
     sqlContext.udf.register("find_le",find_le)
     
-    
+
+    print("----------------------first-------------------------")
     sqlContext.sql("""
         select
-             a.PAN,b.*
+             a.PAN,a.TotalCredit,b.Credit_start,b.Percentage,b.Condition
         from
             (select *,find_le(TotalCredit) as Credit_start from card_table) a
         left join credit_table b
-        on a.TotalCredit = b.Credit_start
-    """).show() 
+        on a.Credit_start = b.Credit_start
+    """).show(100) 
+
+    #Have the same result compared to original method
+#     print("-----------------------second-------------------------")
+#     sqlContext.sql("""
+#         select
+#             a.*,b.*
+#         from
+#             card_table A
+#             JOIN credit_table B
+#             ON A.TotalCredit >= B.Credit_start
+#             AND A.TotalCredit <= B.Credit_end
+#     """).show()
     sc.stop()
     
