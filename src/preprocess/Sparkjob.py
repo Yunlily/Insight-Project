@@ -28,12 +28,11 @@ if __name__ == "__main__":
     rddtrans = rdd_trans.filter(lambda line: line != header).map(lambda x:x.split("|"))
     
     rdd_credit = sc.textFile("s3n://creditcardtransaction/credit.csv")
-    header = rdd_credit.first()
-    rddcredit = rdd_credit.filter(lambda line: line != header).map(lambda x: x.split("|"))
+    rddcredit = rdd_credit.map(lambda x: x.split("|"))
     
     #Add schema
     schemaString1 = "Name Phone Birthday CardNum Address City Postal"
-    schemaString2 = "Name PAN PIN CVV Limits Guarantor CardType"
+    schemaString2 = "PAN Name PIN CVV Limits Guarantor CardType TotalCredit"
     schemaString3 = "Name Tran_num PAN Merchant Amount Time Type Status Credit"
     schemaString4 = "Credit_start Credit_end Percentage Condition"
     fields_user = [StructField(field_name,StringType(),False) for field_name in schemaString1.split()]
@@ -56,6 +55,7 @@ if __name__ == "__main__":
     user_info.show()
     card_info.show()
     trans_info.show()
+    credit_info.show()
     
     sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
     user_info.write.jdbc(
