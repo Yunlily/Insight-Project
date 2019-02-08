@@ -33,7 +33,7 @@ if __name__ == "__main__":
     #Add schema
     schemaString1 = "Name Phone Birthday CardNum Address City Postal"
     schemaString2 = "PAN Name PIN CVV Limits Guarantor CardType TotalCredit"
-    schemaString3 = "Name Tran_num PAN Merchant Amount Time Type Status Credit"
+    schemaString3 = "Tran_num PAN Merchant Amount Time Type Status Credit"
     schemaString4 = "Credit_start Credit_end Percentage Condition"
     fields_user = [StructField(field_name,StringType(),False) for field_name in schemaString1.split()]
     fields_card = [StructField(field_name,StringType(),False) for field_name in schemaString2.split()]
