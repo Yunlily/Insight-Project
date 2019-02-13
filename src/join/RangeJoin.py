@@ -22,20 +22,20 @@ if __name__ == "__main__":
     
     card_table.createOrReplaceTempView("card_table")
     
-#     credit_table.show()
-    credit_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","credit_info").option("user","root").option("password","Dapiyanzi123").load()
+#     score_table.show()
+    score_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","score_info").option("user","root").option("password","Dapiyanzi123").load()
     
-    credit_table.createOrReplaceTempView("credit_table")
+    score_table.createOrReplaceTempView("score_table")
     
-    credit_start_bd = sc.broadcast(credit_table.select("Credit_start").orderBy("Credit_start").rdd.flatMap(lambda x:x).collect())
+    score_start_bd = sc.broadcast(score_table.select("Score_start").orderBy("Score_start").rdd.flatMap(lambda x:x).collect())
     
 
-#     print(credit_start_bd.value)
+#     print(score_start_bd.value)
     #Binary Search to find the start of Credit
     def find_le(x):
-        i = bisect_right(credit_start_bd.value,x)
+        i = bisect_right(score_start_bd.value,x)
         if i:
-            return credit_start_bd.value[i-1]
+            return score_start_bd.value[i-1]
         return None
 
     
@@ -45,11 +45,11 @@ if __name__ == "__main__":
     print("----------------------first-------------------------")
     sqlContext.sql("""
         select
-             a.PAN,a.TotalCredit,b.Credit_start,b.Percentage,b.Condition
+             a.PAN,a.TotalScore,b.Score_start,b.Percentage,b.Condition
         from
-            (select *,find_le(TotalCredit) as Credit_start from card_table) a
-        left join credit_table b
-        on a.Credit_start = b.Credit_start
+            (select *,find_le(TotalScore) as Score_start from card_table) a
+        left join score_table b
+        on a.Score_start = b.Score_start
     """).show(100) 
 
     #Have the same result compared to original method
@@ -59,9 +59,9 @@ if __name__ == "__main__":
 #             a.*,b.*
 #         from
 #             card_table A
-#             JOIN credit_table B
-#             ON A.TotalCredit >= B.Credit_start
-#             AND A.TotalCredit <= B.Credit_end
+#             JOIN score_table B
+#             ON A.TotalScore >= B.Score_start
+#             AND A.TotalScore <= B.Score_end
 #     """).show()
     sc.stop()
     
