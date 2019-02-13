@@ -27,35 +27,35 @@ if __name__ == "__main__":
     header = rdd_trans.first()
     rddtrans = rdd_trans.filter(lambda line: line != header).map(lambda x:x.split("|"))
     
-    rdd_credit = sc.textFile("s3n://creditcardtransaction/credit.csv")
-    rddcredit = rdd_credit.map(lambda x: x.split("|"))
+    rdd_score = sc.textFile("s3n://creditcardtransaction/score.csv")
+    rddscore = rdd_score.map(lambda x: x.split("|"))
     
     #Add schema
     schemaString1 = "Name Phone Birthday CardNum Address City Postal"
-    schemaString2 = "PAN Name PIN CVV Limits Guarantor CardType TotalCredit"
-    schemaString3 = "Tran_num PAN Merchant Amount Time Type Status Credit"
-    schemaString4 = "Credit_start Credit_end Percentage Condition"
+    schemaString2 = "PAN Name PIN CVV Limits Guarantor CardType TotalScore"
+    schemaString3 = "Tran_num PAN Merchant Amount Time Type CardType Status"
+    schemaString4 = "Score_start Score_end Percentage Condition"
     fields_user = [StructField(field_name,StringType(),False) for field_name in schemaString1.split()]
     fields_card = [StructField(field_name,StringType(),False) for field_name in schemaString2.split()]
     fields_trans = [StructField(field_name,StringType(),False) for field_name in schemaString3.split()]
-    fields_credit = [StructField(field_name,StringType(),False) for field_name in schemaString4.split()]
+    fields_score = [StructField(field_name,StringType(),False) for field_name in schemaString4.split()]
     
 #     Create DF using RDD and schema
     schema1 = StructType(fields_user)
     schema2 = StructType(fields_card)
     schema3 = StructType(fields_trans)
-    schema4 = StructType(fields_credit)
+    schema4 = StructType(fields_score)
     sqlContext = SQLContext(sc)
     user_info = sqlContext.createDataFrame(rdduser, schema1)
     card_info = sqlContext.createDataFrame(rddcard, schema2)
     trans_info = sqlContext.createDataFrame(rddtrans, schema3)
-    credit_info = sqlContext.createDataFrame(rddcredit, schema4)
+    score_info = sqlContext.createDataFrame(rddscore, schema4)
     
 #    Displays the content of the DataFrame to stdout    
     user_info.show()
     card_info.show()
     trans_info.show()
-    credit_info.show()
+    score_info.show()
     
     sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
     user_info.write.jdbc(
@@ -76,9 +76,9 @@ if __name__ == "__main__":
         mode='append',
         properties = sdf_props
     )
-    credit_info.write.jdbc(
+    score_info.write.jdbc(
         url='jdbc:mysql://localhost/card_db',
-        table='credit_info',
+        table='score_info',
         mode='append',
         properties = sdf_props
     )
