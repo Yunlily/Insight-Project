@@ -15,6 +15,15 @@ if __name__ == "__main__":
     # $example on:init_session$
     
     conf = SparkConf().setAppName("CreditCardInfo")
+    conf.set('spark.cores.max',60)
+    conf.set('spark.executor.memory','5g')
+    conf.set('spark.rpc.askTimeout',240)
+    conf.set('spark.driver.memory','20g')
+    conf.set('spark.dynamicAllocation.enabled',True)
+    conf.set('spark.shuffle.service.enabled',True)
+    conf.set('spark.task.maxFailures',1)
+    conf.set('spark.network.timeout','600s')
+    conf.set("yarn.nodemanager.vmem-check-enabled","false")
     sc = SparkContext(conf=conf)
     
     sqlContext = SQLContext(sc)
