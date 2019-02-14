@@ -14,6 +14,14 @@ if __name__ == "__main__":
     # $example on:init_session$
     
     conf = SparkConf().setAppName("CreditCardInfo")
+    conf.set('spark.cores.max',60)
+    conf.set('spark.executor.memory','5g')
+    conf.set('spark.rpc.askTimeout',240)
+    conf.set('spark.driver.memory','5g')
+    conf.set('spark.dynamicAllocation.enabled',True)
+    conf.set('spark.shuffle.service.enabled',True)
+    conf.set('spark.task.maxFailures',1)
+    conf.set('spark.network.timeout','600s')
     sc = SparkContext(conf=conf)
     
     sqlContext = SQLContext(sc)
@@ -30,7 +38,7 @@ if __name__ == "__main__":
     score_start_bd = sc.broadcast(score_table.select("Score_start").orderBy("Score_start").rdd.flatMap(lambda x:x).collect())
     
 
-#     print(score_start_bd.value)
+    print(score_start_bd.value)
     #Binary Search to find the start of Credit
     def find_le(x):
         i = bisect_right(score_start_bd.value,x)
@@ -50,7 +58,7 @@ if __name__ == "__main__":
             (select *,find_le(TotalScore) as Score_start from card_table) a
         left join score_table b
         on a.Score_start = b.Score_start
-    """).show(100) 
+    """).show(10) 
 
     #Have the same result compared to original method
 #     print("-----------------------second-------------------------")
