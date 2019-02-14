@@ -58,30 +58,30 @@ if __name__ == "__main__":
     score_info.show()
     
     sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
-    user_info.write.jdbc(
-        url='jdbc:mysql://localhost/card_db',
-        table='user_info',
-        mode='append',
-        properties = sdf_props
-    )
+#     user_info.write.jdbc(
+#         url='jdbc:mysql://localhost/card_db',
+#         table='user_info',
+#         mode='append',
+#         properties = sdf_props
+#     )
     card_info.write.jdbc(
         url='jdbc:mysql://localhost/card_db',
         table='card_info',
         mode='append',
         properties = sdf_props
     )
-    trans_info.write.jdbc(
-        url='jdbc:mysql://localhost/card_db',
-        table='trans_info',
-        mode='append',
-        properties = sdf_props
-    )
-    score_info.write.jdbc(
-        url='jdbc:mysql://localhost/card_db',
-        table='score_info',
-        mode='append',
-        properties = sdf_props
-    )
+#     trans_info.write.jdbc(
+#         url='jdbc:mysql://localhost/card_db',
+#         table='trans_info',
+#         mode='append',
+#         properties = sdf_props
+#     )
+#     score_info.write.jdbc(
+#         url='jdbc:mysql://localhost/card_db',
+#         table='score_info',
+#         mode='append',
+#         properties = sdf_props
+#     )
     
     sc.stop()
     
