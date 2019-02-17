@@ -2,7 +2,7 @@ from flask import Flask, render_template,url_for,redirect,request
 from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
 import yaml
-
+import os
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -13,24 +13,23 @@ app.config['MYSQL_HOST'] = db['mysql_host']
 app.config['MYSQL_USER'] = db['mysql_user']
 app.config['MYSQL_PASSWORD'] = db['mysql_password']
 app.config['MYSQL_DB'] = db['mysql_db']
-
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
+app.config['SECRET_KEY'] = os.urandom(24)
 @app.route('/', methods=['GET','POST'])
 def index():
-	if request.method == 'POST':
-#        	form = request.form
-#		email = form['email']
-#		password = form['password']
-#		cur = mysql.connection.cursor()
-#		cur.execute("INSERT INTO user(email, password) VALUES(%s, %s)", (email,password))
-#		mysql.connection.commit()
-	return render_template('index.html')
+    return render_template('index.html')
+
+@app.route('/time')
+def time_complexity():
+    return render_template('time.html')
+
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-	return 'This page was not found'
+    return 'This page was not found'
 
 
 

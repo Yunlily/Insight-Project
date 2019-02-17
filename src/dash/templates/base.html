@@ -1,8 +1,16 @@
 {% extends 'bootstrap/base.html' %}
+
+
 {% block title %}
 Result
 {% endblock %}
+
+{% block navbar %}
+  {% include '_navbar.html' %}
+{% endblock %}
+
+
 {% block content %}
-    {% block body %}
+    {% block sub_content %}
     {% endblock %}
 {% endblock %}
