@@ -70,18 +70,17 @@ if __name__ == "__main__":
         mode='append',
         properties = sdf_props
     )
-#     trans_info.write.jdbc(
-#         url='jdbc:mysql://localhost/card_db',
-#         table='trans_info',
-#         mode='append',
-#         properties = sdf_props
-#     )
-#     score_info.write.jdbc(
-#         url='jdbc:mysql://localhost/card_db',
-#         table='score_info',
-#         mode='append',
-#         properties = sdf_props
-#     )
+    trans_info.write.jdbc(
+        url='jdbc:mysql://localhost/card_db',
+        table='trans_info',
+        mode='append',
+        properties = sdf_props
+    )
+    score_info.write.jdbc(
+        url='jdbc:mysql://localhost/card_db',
+        table='score_info',
+        mode='append',
+        properties = sdf_props
+    )
     
     sc.stop()
-    
