@@ -20,3 +20,6 @@ Daily Transaction Table: 100,000,000.
 
 ### Tech Stack:
 ![Techstack](./Image/arch.png)
+
+### Optimization Result:
+https://bit.ly/2NeGlur
