@@ -9,7 +9,7 @@ The engineering challenge of this project is to optimize the time and space comp
 2. Join a daily transaction table with a card table to add card information to today's transaction information.
 
 ### Dataset
-The data is generated[http://generatedata.com].
+The data is [generated](http://generatedata.com).
 Data size:
 Person info Table: 3,000,000.
 Card info Table: 3,000,000,000.
