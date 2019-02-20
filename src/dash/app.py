@@ -25,7 +25,9 @@ def index():
 def time_complexity():
     return render_template('time.html')
 
-
+@app.route('/space')
+def space_complexity():
+    return render_template('space.html')
 
 @app.errorhandler(404)
 def page_not_found(e):
