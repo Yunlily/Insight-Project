@@ -11,9 +11,12 @@ The engineering challenge of this project is to optimize the time and space comp
 ### Dataset
 The data is [generated](http://generatedata.com).
 Data size:
+
 Person info Table: 3,000,000.
+
 Card info Table: 3,000,000,000.
+
 Daily Transaction Table: 100,000,000.
 
-### Architecture
-![arch](Image/architecture2.png)
+### Tech Stack:
+![Techstack](./Image/arch.png)
