@@ -23,3 +23,6 @@ Daily Transaction Table: 100,000,000.
 
 ### Optimization Result:
 https://bit.ly/2NeGlur
+
+### Slides:
+https://bit.ly/2NXTjgI
