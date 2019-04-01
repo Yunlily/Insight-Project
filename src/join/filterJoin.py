@@ -28,12 +28,12 @@ if __name__ == "__main__":
     
     sqlContext = SQLContext(sc)
 
-    card_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","card_info").option("user","root").option("password","Dapiyanzi123").load()
+    card_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","card_info").option("user","root").option("password",**********).load()
     
     card_table.createOrReplaceTempView("card_table")
     
 #     credit_table.show()
-    trans_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","trans_info").option("user","root").option("password","Dapiyanzi123").load()
+    trans_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","trans_info").option("user","root").option("password",**********).load()
     trans_table.createOrReplaceTempView("trans_table")
     
     distinctPAN = sqlContext.sql("select distinct PAN from card_table").persist(StorageLevel.DISK_ONLY)

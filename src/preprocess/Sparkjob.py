@@ -57,7 +57,7 @@ if __name__ == "__main__":
     trans_info.show()
     score_info.show()
     
-    sdf_props = {'user':'root','password':'Dapiyanzi123','driver':'com.mysql.jdbc.Driver'}
+    sdf_props = {'user':'root','password':**********,'driver':'com.mysql.jdbc.Driver'}
 #     user_info.write.jdbc(
 #         url='jdbc:mysql://localhost/card_db',
 #         table='user_info',

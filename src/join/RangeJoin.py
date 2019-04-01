@@ -26,12 +26,12 @@ if __name__ == "__main__":
     
     sqlContext = SQLContext(sc)
 
-    card_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","card_info").option("user","root").option("password","Dapiyanzi123").load()
+    card_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","card_info").option("user","root").option("password",**********).load()
     
     card_table.createOrReplaceTempView("card_table")
     
 #     score_table.show()
-    score_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","score_info").option("user","root").option("password","Dapiyanzi123").load()
+    score_table = sqlContext.read.format("jdbc").option("url","jdbc:mysql://localhost/card_db").option("driver","com.mysql.jdbc.Driver").option("dbtable","score_info").option("user","root").option("password",**********).load()
     
     score_table.createOrReplaceTempView("score_table")
     
